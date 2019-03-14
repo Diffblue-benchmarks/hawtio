@@ -100,7 +100,7 @@
   </properties>
 
   <modules>
-    <module>bom</module>
+    <!-- <module>bom</module>
     <module>examples/springboot-authentication</module>
     <module>examples/springboot</module>
     <module>examples/springboot-1-authentication</module>
@@ -115,17 +115,27 @@
     <module>hawtio-log</module>
     <module>hawtio-log-osgi</module>
     <module>hawtio-local-jvm-mbean</module>
-    <module>hawtio-system</module>
+    <module>hawtio-system</module> -->
     <module>hawtio-util</module>
-    <module>hawtio-war</module>
+    <!-- <module>hawtio-war</module>
     <module>platforms/hawtio-osgi-jmx</module>
     <module>platforms/karaf</module>
     <module>platforms/springboot</module>
     <module>platforms/springboot-1</module>
     <module>platforms/wildfly</module>
     <module>tooling/hawtio-junit</module>
-    <module>tooling/hawtio-maven-plugin</module>
+    <module>tooling/hawtio-maven-plugin</module> -->
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+      <version>0.8.3</version>
+      <scope>test</scope>
+      <classifier>runtime</classifier>
+    </dependency>
+  </dependencies>
 
   <build>
     <defaultGoal>install</defaultGoal>
@@ -190,6 +200,7 @@
           <systemPropertyVariables>
             <basedir>${basedir}</basedir>
             <java.awt.headless>true</java.awt.headless>
+            <jacoco-agent.destfile>${project.build.directory}/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
 
           <excludes>
@@ -203,6 +214,27 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.3</version>
+        <executions>
+          <execution>
+            <id>instrument</id>
+            <phase>process-test-classes</phase>
+            <goals>
+              <goal>instrument</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>restore-instrumented-classes</id>
+            <phase>test</phase>
+            <goals>
+              <goal>restore-instrumented-classes</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
